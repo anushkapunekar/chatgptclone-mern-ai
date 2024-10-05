@@ -32,6 +32,7 @@ here we made layout as one of the file for common component.
 //in css for height to be fullpage we need to write height of that particular page as : 100 vh
 //similarly for showing the particulr thing horizontally we use display as flex .   
 //for items to get vertical use flex-direction as :column when needed,mostly happens when in bg color items get disturbed
+//if you need items to be horifzonatl use display: flex , also alignitems and 
 
 //now for authentication purpose here for protecting our user information and protecting our dashboard we are using CLERK.
 why we are using clerk ?
@@ -41,3 +42,8 @@ it does it all by himself.
 //with help help of clerk make sign in and sign out page add the routesd in main.jsx
 
 //now to protect our ai , for the security , inside dashboardlayout we make const auth hook which is gonna give us userid ,also its gonna tell us if its loaded or not . if its loaded its gonna be true and after loading we are gonna the userid.
+
+//now we move ahead for making our home page , we made 2 divs , left and write and added a button and provide css
+//(for refrence how od i gave the background image please check homepage and also its css .orbital)
+it aslo have animation so , for that animation , it should be linear , infinte so it keeps going on 
+for creating animation we need to use @keyframes and ---whatever you wanna do with that
