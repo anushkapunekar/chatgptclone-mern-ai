@@ -47,3 +47,7 @@ it does it all by himself.
 //(for refrence how od i gave the background image please check homepage and also its css .orbital)
 it aslo have animation so , for that animation , it should be linear , infinte so it keeps going on 
 for creating animation we need to use @keyframes and ---whatever you wanna do with that
+
+//for text to appear one after another we used a library named reacttype animation , install it and import the required material from the site to our homepage
+//for changing human pic in the chat we used usestate hook in homepage
+//until now it wont be responsive so we used media query and gave the instruction just go through the css 
