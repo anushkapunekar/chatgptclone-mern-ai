@@ -32,7 +32,7 @@ here we made layout as one of the file for common component.
 //in css for height to be fullpage we need to write height of that particular page as : 100 vh
 //similarly for showing the particulr thing horizontally we use display as flex .   
 //for items to get vertical use flex-direction as :column when needed,mostly happens when in bg color items get disturbed
-//if you need items to be horifzonatl use display: flex , also alignitems and 
+//if you need items to be horifzonatl use display: flex , also alignitems..
 
 //now for authentication purpose here for protecting our user information and protecting our dashboard we are using CLERK.
 why we are using clerk ?
@@ -51,3 +51,8 @@ for creating animation we need to use @keyframes and ---whatever you wanna do wi
 //for text to appear one after another we used a library named reacttype animation , install it and import the required material from the site to our homepage
 //for changing human pic in the chat we used usestate hook in homepage
 //until now it wont be responsive so we used media query and gave the instruction just go through the css 
+//for starting the button ofget strated in home page we used z-index=-1
+
+//for making chats we made a component chtalist , created the chatlist column and provided css
+//moving towards the dashboard page we provide 3 options to user along with the links. 
+//basically we created 3 options here along with a form to search
