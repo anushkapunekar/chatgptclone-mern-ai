@@ -56,3 +56,8 @@ for creating animation we need to use @keyframes and ---whatever you wanna do wi
 //for making chats we made a component chtalist , created the chatlist column and provided css
 //moving towards the dashboard page we provide 3 options to user along with the links. 
 //basically we created 3 options here along with a form to search
+//created the dashboard design and added css
+
+
+//now we will move forward for making our chatpage , now in css we have used align self for user to be flex end which will take our chat to right side.
+//now we need to add form in the chatpage , for that we need to make new componenent otherwise it would re render again so to prevent this we crated new componenet newpropmt and use it inside your chatpage

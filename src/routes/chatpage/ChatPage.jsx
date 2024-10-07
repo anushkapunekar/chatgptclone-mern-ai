@@ -1,18 +1,38 @@
-import React from 'react'
+import React from "react";
+import "./chatPage.css";
+import NewPrompt from "../../components/newPrompt/NewPrompt";
 
-function ChatPage() {
-  return (
-    <div>ChatPage</div>
-  )
+const ChatPage=()=>{
+
+  
+ return(
+  <div className="chatPage">
+    <div className="wrapper">
+      < div className="chat">
+        <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div>
+        <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div>
+        <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div>
+        <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div>
+        <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div> <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div> <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div> <div className="message">Test message from ai</div>
+        <div className="message user">Test message from user</div>
+        <NewPrompt/>
+        
+
+      </div>
+
+    </div>
+  </div>
+ )
 }
 
-// const ChatPage =()=>{
-//     <div className='chatPage'>ChatPage</div>
-// }
-// export default ChatPage;
-
-
-export default ChatPage
+export default ChatPage;
 
 
 
