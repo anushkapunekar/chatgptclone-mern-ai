@@ -56,3 +56,22 @@ for creating animation we need to use @keyframes and ---whatever you wanna do wi
 //for making chats we made a component chtalist , created the chatlist column and provided css
 //moving towards the dashboard page we provide 3 options to user along with the links. 
 //basically we created 3 options here along with a form to search
+//created the dashboard design and added css
+
+
+//now we will move forward for making our chatpage , now in css we have used align self for user to be flex end which will take our chat to right side.
+//now we need to add form in the chatpage , for that we need to make new componenent otherwise it would re render again so to prevent this we crated new componenet newpropmt and use it inside your chatpage
+
+//now to write our new msg i.e our question and image ai would give the answers and it would get stored to our database so in future we can see it .for storing image we are using image kit.
+great platform for resizing your images , storing it , and its realtime
+// install imagekit.io after tht we gonna need the endpint and publickey for it function and add those to env
+//now you need have a public key for that so check your env for ref
+//what happens is before uploading an image firstly we check the authentication using the private key and after verification we can upload our images
+
+
+//now lets create our backend server
+//make a folder of backend install node(-y) and nodemon nd then install express , now it wont import unless and until we write type = module in package.json
+
+//now that we have created our server we need to upload our images for that we need a library name image.kit and its end pt, key nd privatekey.
+//if you chcek newprompt file , there we have intructions for our image , so if you want your image to work smartly, use transfomartion for images only.
+//all the uploading is done in uplooad AND new prompt
