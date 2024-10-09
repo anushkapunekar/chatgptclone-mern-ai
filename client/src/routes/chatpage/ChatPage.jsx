@@ -2,6 +2,7 @@ import React from "react";
 import "./chatPage.css";
 import NewPrompt from "../../components/newPrompt/NewPrompt";
 
+
 const ChatPage=()=>{
 
   

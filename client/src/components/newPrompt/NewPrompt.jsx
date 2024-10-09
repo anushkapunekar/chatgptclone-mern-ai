@@ -11,25 +11,52 @@ const NewPrompt = () =>{
     const[img, setImg] = useState({
         isLoading : false,
         error: "",
-        dbData: {}
+        dbData: {},
+        aiData:{},
     });
+
+    const data = {
+    history: [
+      {
+        role: "user",
+        parts: [{ text: "Hello, AI!" }],
+      },
+      {
+        role: "ai",
+        parts: [{ text: "Hello, human!" }],
+      },
+    ],
+  };
+
+    const chat = model.startChat({
+      history: [
+        data?.history.map(({ role, parts }) => ({
+          role,
+          parts: [{ text: parts[0].text }],
+        })),
+      ],
+      generationConfig: {
+        // maxOutputTokens: 100,
+      },
+    });
+
+
 
     const endRef = useRef(null);
 
   useEffect(()=>{
     endRef.current.scrollIntoView({ behavior: "smooth"});
-  }, [question , answer , img.dbData]);
+  }, [ question , answer , img.dbData]);
 
 
-  const add = async(text)=>{
-    setQuestion(text)
+  const add = async (text) => {
+    setQuestion(text);
 
-    const result = await model.generateContent(text);
-    const response = await result.response;
-    setAnswer(response.text())
-    console.log(text);
-
-  };
+    const result = await chat.sendMessage(Object.entries(img.aiData).length ? [img.aiData,text]:[text]);
+    const response= await result.response;
+    setAnswer(response.text());
+    setImg({ isLoading: false , error: '' , dbData:{} , aiData:{}})
+};
 
   const handleSubmit = async(e)=>{
     e.preventDefault();
