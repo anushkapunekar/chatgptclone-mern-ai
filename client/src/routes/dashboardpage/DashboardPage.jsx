@@ -1,43 +1,43 @@
 import React, { useState } from 'react';
 import "./dashboardPage.css";
-import { useAuth } from '@clerk/clerk-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+
 
 const DashboardPage = () => {
-    const [response, setResponse] = useState(""); // State to store the backend response
-    const [loading, setLoading] = useState(false); // State to manage loading state
     
-    const {userId} = useAuth();
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const text = e.target.text.value;
-        if (!text) return;
+    
+    const queryClient = useQueryClient()
 
-        setLoading(true); // Show loading while fetching
+    const navigate = useNavigate()
 
-        try {
-            const res = await fetch("http://localhost:3000/api/chats", {
+    const mutation = useMutation({
+        mutationFn: (text)=>{
+            return fetch(`${import.meta.env.VITE_API_URL}/api/chats`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({  text })
-            });
-            console.log('Response status:', res.status); // Log status
-         const data = await res.json();
-         console.log('Response data:', data); // Log full response
+            }).then((res)=> res.json());
+        },
+        onSuccess: (id) => {
+            //invalid and refetch
+            queryClient.invalidateQueries({queryKey:["userChats"]});
+            navigate(`/dashboard/chats/${id}`);
+        },
+    });
 
-         if (data && data.message) {
-             setResponse(data.message);
-         } else {
-             setResponse("No message received from the backend.");
-         }
-     } catch (error) {
-         console.error('Error occurred:', error);
-         setResponse("Error occurred while fetching the data.");
-     } finally {
-         setLoading(false);
-     }
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const text = e.target.text.value;
+        if (!text) return;
+       
+        mutation.mutate(text);
  };
 
     return (
@@ -72,14 +72,7 @@ const DashboardPage = () => {
                 </form>
             </div>
 
-            {/* Display the backend response */}
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <div className='response'>
-                    {response && <p>{response}</p>}
-                </div>
-            )}
+            
         </div>
     );
 };
