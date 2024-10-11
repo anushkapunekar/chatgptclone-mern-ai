@@ -1,5 +1,5 @@
-import { text } from "express";
-import mongoose, { mongo } from "mongoose";
+
+import mongoose from "mongoose";
 
 const userChatsSchema = new mongoose.Schema({
     userId:{
@@ -25,4 +25,5 @@ const userChatsSchema = new mongoose.Schema({
 },    
 {timestamps: true});
 
-export default mongoose.models.userchats || mongoose.model("chat" , userChatsSchema);
+export default mongoose.models.userchats ||
+  mongoose.model("userchats", userChatsSchema);

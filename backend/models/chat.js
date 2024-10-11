@@ -1,5 +1,5 @@
-import { text } from "express";
-import mongoose, { mongo } from "mongoose";
+
+import mongoose  from "mongoose";
 
 const chatSchema = new mongoose.Schema({
     userId:{
@@ -10,7 +10,7 @@ const chatSchema = new mongoose.Schema({
         {
             role:{
                 type: String,
-                enum: ["user" | "model"],
+                enum: ["user" , "model"],
                 required:true,
             },
             parts:[
