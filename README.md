@@ -78,3 +78,5 @@ great platform for resizing your images , storing it , and its realtime
 
 
 //to fetch data we gona use "useQuery"fnc. so inside this function we gonna pass our gqury key and then pass their unique key , so that when we write new chat , we can fetch it whenever we want.
+
+//whwnever we need to acces the id just pop for ex: const chatId = path.split("/").pop()

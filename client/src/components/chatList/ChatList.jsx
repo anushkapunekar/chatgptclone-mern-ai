@@ -13,7 +13,7 @@ const ChatList =()=>{
     }).then((res) =>
             res.json(),
           ),
-      })
+      });
 
     return(
         <div className='chatList'>
