@@ -15,30 +15,29 @@ const NewPrompt = () =>{
         aiData:{},
     });
 
-    const data = {
-    history: [
-      {
-        role: "user",
-        parts: [{ text: "Hello, AI!" }],
-      },
-      {
-        role: "ai",
-        parts: [{ text: "Hello, human!" }],
-      },
-    ],
-  };
-
     const chat = model.startChat({
-      history: [
-        data?.history.map(({ role, parts }) => ({
-          role,
-          parts: [{ text: parts[0].text }],
-        })),
+      history:[
+        {
+          role: "user",
+          parts: [{text: "hello , i have 2 dogs in my house"}],
+        },
+        {
+          role: "model",
+          parts: [{text: "great to meet you.what would you like to know"}],
+        },
       ],
-      generationConfig: {
-        // maxOutputTokens: 100,
+      generationConfig:{
+        // maxOutputTokens:100,
       },
     });
+
+    // try {
+    //   const result =  chat.sendMessageStream(['your message here']);
+    //   console.log(result);
+      
+    // } catch (error) {
+    //   console.error("sendMessageStream error :", error);
+    // }
 
 
 
@@ -52,10 +51,15 @@ const NewPrompt = () =>{
   const add = async (text) => {
     setQuestion(text);
 
-    const result = await chat.sendMessage(Object.entries(img.aiData).length ? [img.aiData,text]:[text]);
-    const response= await result.response;
-    setAnswer(response.text());
-    setImg({ isLoading: false , error: '' , dbData:{} , aiData:{}})
+    const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData,text]:[text]);
+    let accumulatedText = "";
+    for await(const chunk of result.stream){
+      const chunkText = chunk.text();
+
+      accumulatedText += chunkText;
+      setAnswer(accumulatedText);
+    } 
+     setImg({ isLoading: false , error: '' , dbData:{} , aiData:{}})
 };
 
   const handleSubmit = async(e)=>{
@@ -64,9 +68,9 @@ const NewPrompt = () =>{
     const text = e.target.text.value;
     if(!text) return;
     
-    add(text)
+    add(text);
   };
-
+    
     return(
         <>
         {/*add new chat*/}

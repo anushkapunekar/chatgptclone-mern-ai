@@ -60,7 +60,6 @@ for creating animation we need to use @keyframes and ---whatever you wanna do wi
 
 
 //now we will move forward for making our chatpage , now in css we have used align self for user to be flex end which will take our chat to right side.
-<<<<<<< HEAD
 //now we need to add form in the chatpage , for that we need to make new componenent otherwise it would re render again so to prevent this we crated new componenet newpropmt and use it inside your chatpage
 
 //now to write our new msg i.e our question and image ai would give the answers and it would get stored to our database so in future we can see it .for storing image we are using image kit.
@@ -76,6 +75,6 @@ great platform for resizing your images , storing it , and its realtime
 //now that we have created our server we need to upload our images for that we need a library name image.kit and its end pt, key nd privatekey.
 //if you chcek newprompt file , there we have intructions for our image , so if you want your image to work smartly, use transfomartion for images only.
 //all the uploading is done in uplooad AND new prompt
-=======
-//now we need to add form in the chatpage , for that we need to make new componenent otherwise it would re render again so to prevent this we crated new componenet newpropmt and use it inside your chatpage
->>>>>>> ff08c772656b3d36d6f1d094eaf132220d3d382f
+
+
+//to fetch data we gona use "useQuery"fnc. so inside this function we gonna pass our gqury key and then pass their unique key , so that when we write new chat , we can fetch it whenever we want.

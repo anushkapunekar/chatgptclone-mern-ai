@@ -6,6 +6,12 @@ import { TypeAnimation } from 'react-type-animation';
 const HomePage = () => {
 
     const [typingStatus , setTypingStatus] = useState("human1")
+    
+    // const test = async()=>{
+    //     await fetch("http://localhost:3000/api/test",{
+    //         credentials: "include",
+    //     });
+    // };
 
   return (
     <div className='homepage'>
@@ -17,6 +23,7 @@ const HomePage = () => {
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit magnam quae nisi inventore unde, odio error aut expedita quia, quas doloribus, fugiat tenetur. Voluptate eveniet explicabo quaerat consequatur nemo facilis asperiores corrupti impedit laudantium.
             </h3>
             <Link to ='/dashboard'>Get Started</Link>
+           
         </div>
         <div className='right'>
             <div className='imgContainer'>
