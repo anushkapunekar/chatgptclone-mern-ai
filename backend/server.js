@@ -2,10 +2,13 @@ import express from "express";
 import ImageKit from "imagekit";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import url, { fileURLToPath }  from "url";
 import mongoose from "mongoose";
 import {ClerkExpressRequireAuth} from "@clerk/clerk-sdk-node";
 import UserChats from "./models/userChats.js";
 import Chat from "./models/chat.js";
+
 
 
 dotenv.config();
@@ -13,7 +16,8 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
 
-
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 // Middleware for CORS
 app.use(
@@ -53,12 +57,6 @@ app.get("/api/upload", (req, res) => {
   res.send(result);
 });
 
-// app.get("/api/test", ClerkExpressRequireAuth(), (req,res)=>{
-//   const userId = req.auth.userId;
-//   console.log(userId);
-//   res.send("success!");
-
-// });
 
 // Route to handle chat messages
 app.post("/api/chats", ClerkExpressRequireAuth(), async (req, res) => {
@@ -175,6 +173,12 @@ app.use((err , req , res , next)=> {
   res.status(401).send("Unauthenticated!");
   
 });
+
+app.use(express.static(path.join(__dirname, "../client")))
+
+app.get("*", (req,res)=> {
+  res.sendFile(path.join(__dirname, "../client" , "index.html"))
+})
   
 
 // Start server and connect to MongoDB
