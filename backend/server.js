@@ -19,7 +19,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CLIENT_URL, 
-    methods: ["GET" , "POST"],
+    methods: ["GET" , "POST" , "PUT"],
     credentials: true,
   })
 );
@@ -67,18 +67,18 @@ app.post("/api/chats", ClerkExpressRequireAuth(), async (req, res) => {
   try {
     //create a new chat
     const newChat= new Chat({
-        userId: userId,
+        userId,
         history: [{role: "user", parts: [{text}]}],
     });
 
     const savedChat = await newChat.save();
 
     //check if the userchats exists
-    const userChats = await UserChats.find({userId: userId});
+    const userChats = await UserChats.find({userId});
    //if doesnt existcreate a new one and add the chat in chats array
     if(!userChats.length){
         const newUserChats = new UserChats({
-            userId:userId,
+            userId,
             chats: [
                 {
                     _id:savedChat._id,
@@ -135,6 +135,40 @@ app.get("/api/chats/:id", ClerkExpressRequireAuth(), async(req,res)=>{
     res.status(500).send("error fetching chat!");
   }
 });
+
+app.put("/api/chats/:id" , ClerkExpressRequireAuth(), async (req,res)=>{
+  const userId = req.auth.userId;
+
+  const {question , answer , img} = req.body;
+
+  const newItems = [
+    ...(question
+      ? [{role:"user", parts: [{text: question}], ...(img && {img})}]
+      : []
+    ),
+    {role: "model" , parts: [{text:answer}]},
+  ];
+
+  try{
+    const updatedChat = await Chat.updateOne(
+      {_id:req.params.id, userId},
+      {
+        $push: {
+          history:{
+            $each: newItems,
+          },
+        },
+      },
+    );
+    console.log("Updated Chat:", updatedChat); 
+    res.status(200).send(updatedChat); 
+  }catch(err){
+    console.log(err);
+    res.status(500).send("error Adding a conversation!");
+  }
+});
+
+
 
 app.use((err , req , res , next)=> {
   console.log(err.stack);

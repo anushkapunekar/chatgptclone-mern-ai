@@ -4,8 +4,9 @@ import Upload from "../upload/Upload ";
 import {IKImage} from "imagekitio-react";
 import model from "../../lib/gemini";
 import Markdown from "react-markdown";
+import { useMutation , useQueryClient} from "@tanstack/react-query"
 
-const NewPrompt = () =>{
+const NewPrompt = ({data}) =>{
     const [question ,setQuestion] = useState("");
     const [answer , setAnswer] = useState("");
     const[img, setImg] = useState({
@@ -19,11 +20,11 @@ const NewPrompt = () =>{
       history:[
         {
           role: "user",
-          parts: [{text: "hello , i have 2 dogs in my house"}],
+          parts: [{text: "hello , i have 2 dogs in my house" , }],
         },
         {
           role: "model",
-          parts: [{text: "great to meet you.what would you like to know"}],
+          parts: [{text: "great to meet you.what would you like to know" ,}],
         },
       ],
       generationConfig:{
@@ -42,24 +43,74 @@ const NewPrompt = () =>{
 
 
     const endRef = useRef(null);
+    const formRef = useRef(null);
 
   useEffect(()=>{
     endRef.current.scrollIntoView({ behavior: "smooth"});
-  }, [ question , answer , img.dbData]);
+  }, [ data ,question , answer , img.dbData?.filepath]);
+
+  const queryClient = useQueryClient();
 
 
-  const add = async (text) => {
-    setQuestion(text);
 
+  const mutation = useMutation({
+      mutationFn: ()=>{
+        if(!data?._id) {
+          throw new Error("chat is is missing");
+        }
+          return fetch(`${import.meta.env.VITE_API_URL}/api/chats/${data._id}`, {
+              method: "PUT",
+              credentials: "include",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({question: question.length? question : undefined,
+              answer,
+              img: img.dbData?.filepath || undefined,
+               }),
+          }).then((res)=> res.json());
+      },
+      onSuccess: () => {
+          //invalid and refetch
+          queryClient.invalidateQueries({queryKey:["chat", data._id]})
+          
+          
+            .then(()=>{
+              formRef.current.reset()
+              setQuestion("");
+              setAnswer("");
+              setImg({
+                isLoading : false,
+                error: "",
+                dbData: {},
+                aiData:{},
+              });
+            });
+          },
+          onError:(err) =>{
+            console.log(err);
+          },
+      });
+     
+         
+
+
+
+  const add = async (text ,isInitial) => {
+     if (!isInitial) setQuestion(text);
+    try{
     const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData,text]:[text]);
     let accumulatedText = "";
     for await(const chunk of result.stream){
       const chunkText = chunk.text();
-
+      console.log(chunkText);
       accumulatedText += chunkText;
       setAnswer(accumulatedText);
     } 
-     setImg({ isLoading: false , error: '' , dbData:{} , aiData:{}})
+    mutation.mutate();
+  }catch(err){
+    console.log(err);
+  }
 };
 
   const handleSubmit = async(e)=>{
@@ -68,12 +119,23 @@ const NewPrompt = () =>{
     const text = e.target.text.value;
     if(!text) return;
     
-    add(text);
+    add(text , false);
   };
+  
+  const hasRun = useRef(false)
+  useEffect(()=> {
+    if(!hasRun.current){ 
+    if(data?.history?.length === 1) {
+      add(data.history[0].parts[0].text, true);
+    }
+  }
+  hasRun.current=true;
+  },[]);
     
     return(
         <>
         {/*add new chat*/}
+        <div cla></div>
         {img.isLoading && <div className="">Loading..</div>}
         {img.dbData?.filepath && (
             <IKImage
@@ -86,11 +148,11 @@ const NewPrompt = () =>{
         {question && <div className='message user'>{question}</div>} 
         {answer && <div className='message'><Markdown>{answer}</Markdown></div>}
         <div className="endChat" ref={endRef}></div>
-            <form className="newForm" onSubmit={handleSubmit}>
+            <form className="newForm" onSubmit={handleSubmit} ref={formRef}>
                <Upload setImg={setImg}/>
                 <input id="file" type="file" multiple={false} hidden/>
                 <input type="text" name="text" placeholder="Ask me anything..." />
-                <button>
+                <button disabled={img.isLoading}>
                     <img src="/arrow.png" alt="" />
                 </button>
             </form>
