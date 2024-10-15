@@ -134,35 +134,57 @@ app.get("/api/chats/:id", ClerkExpressRequireAuth(), async(req,res)=>{
   }
 });
 
-app.put("/api/chats/:id" , ClerkExpressRequireAuth(), async (req,res)=>{
+app.put("/api/chats/:id", ClerkExpressRequireAuth(), async (req, res) => {
   const userId = req.auth.userId;
+  const { question, answer, img } = req.body;
 
-  const {question , answer , img} = req.body;
+  // Validate required fields
+  if (!answer) {
+    return res.status(400).send({ error: "Answer is required." });
+  }
 
+  // Ensure question is provided and not empty
+  if (!question) {
+    return res.status(400).send({ error: "Question is required." });
+  }
+
+  // Prepare new items to be pushed into chat history
   const newItems = [
-    ...(question
-      ? [{role:"user", parts: [{text: question}], ...(img && {img})}]
-      : []
-    ),
-    {role: "model" , parts: [{text:answer}]},
+    {
+      role: "user", // Ensure the first content is from the user
+      parts: [{ text: question }],
+      ...(img && { img }), // Include the img field if provided
+    },
+    {
+      role: "model",
+      parts: [{ text: answer }],
+    },
   ];
 
-  try{
+  try {
+    // Check if the chat exists and belongs to the authenticated user
+    const chat = await Chat.findOne({ _id: req.params.id, userId });
+    if (!chat) {
+      return res.status(404).send({ error: "Chat not found or does not belong to the user." });
+    }
+
+    // Update the chat history
     const updatedChat = await Chat.updateOne(
-      {_id:req.params.id, userId},
+      { _id: req.params.id, userId },
       {
         $push: {
-          history:{
+          history: {
             $each: newItems,
           },
         },
-      },
+      }
     );
-    console.log("Updated Chat:", updatedChat); 
-    res.status(200).send(updatedChat); 
-  }catch(err){
-    console.log(err);
-    res.status(500).send("error Adding a conversation!");
+
+    console.log("Updated Chat:", updatedChat);
+    res.status(200).send(updatedChat);
+  } catch (err) {
+    console.error("Error adding to conversation:", err);
+    res.status(500).send({ error: "Error adding to the conversation!" });
   }
 });
 
