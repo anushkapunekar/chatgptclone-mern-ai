@@ -17,14 +17,14 @@ const NewPrompt = ({data}) =>{
     });
 
     const chat = model.startChat({
-      history:[
-        data?.history.map(({role,parts})=> ({
-          role:"user",
-          parts:[{text: parts[0].text}],
-        })),
-      ],
-      generationConfig:{
-        // maxOutputTokens:100,
+      history: data?.history?.length
+        ? data.history.map(({role, parts}) => ({
+            role: role || "user",  // Ensure role is set, default to "user"
+            parts: [{text: parts[0]?.text || "Default message"}], // Avoid undefined text
+          }))
+        : [{ role: "user", parts: [{ text: "Default initial message" }] }],
+      generationConfig: {
+        // maxOutputTokens: 100,
       },
     });
 
@@ -122,11 +122,11 @@ const NewPrompt = ({data}) =>{
   useEffect(()=> {
     if(!hasRun.current){ 
     if(data?.history?.length === 1) {
-      add(data.history[0].parts[0].text, true);
+      add(data.history[0]?.parts[0]?.text || "default user message", true);
     }
   }
   hasRun.current=true;
-  },[]);
+  },[data]);
     
     return(
         <>
